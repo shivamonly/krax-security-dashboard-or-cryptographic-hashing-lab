@@ -1,0 +1,307 @@
+@import "tailwindcss";
+
+@theme {
+  --color-secondary-fixed: #9cf0ff;
+  --color-border-glow: rgba(0, 255, 65, 0.15);
+  --color-primary-container: #00ff41;
+  --color-outline-variant: #3b4b37;
+  --color-primary-fixed-dim: #00e639;
+  --color-vulnerability-red: #FF1744;
+  --color-surface: #131314;
+  --color-surface-container: #201f20;
+  --color-surface-container-high: #2a2a2b;
+  --color-surface-variant: #353436;
+  --color-surface-dim: #131314;
+  --color-secondary-container: #00e3fd;
+  --color-outline: #84967e;
+  --color-data-blue: #00B0FF;
+  --color-on-background: #e5e2e3;
+  --color-surface-container-highest: #353436;
+  --color-background: #131314;
+  --color-surface-bright: #3a393a;
+  --color-surface-container-low: #1c1b1c;
+  --color-terminal-black: #050505;
+  --color-on-surface: #e5e2e3;
+  --color-on-surface-variant: #b9ccb2;
+  --color-surface-container-lowest: #0e0e0f;
+
+  --font-label-caps: "JetBrains Mono", monospace;
+  --font-code-block: "JetBrains Mono", monospace;
+  --font-display-lg: "JetBrains Mono", monospace;
+  --font-headline-md: "JetBrains Mono", monospace;
+  --font-body-md: "Hanken Grotesk", sans-serif;
+  --font-stat-value: "JetBrains Mono", monospace;
+  
+  --spacing-element-gap: 8px;
+  --spacing-gutter: 16px;
+  --spacing-container-padding-mobile: 16px;
+  --spacing-container-padding-desktop: 32px;
+  --spacing-grid-unit: 4px;
+}
+
+@keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+@keyframes matrix-fade {
+    0% { opacity: 0; transform: translateY(-20px); }
+    50% { opacity: 0.5; }
+    100% { opacity: 0; transform: translateY(20px); }
+}
+@keyframes background-glitch {
+    0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+    2% { clip-path: inset(10% 0 85% 0); transform: translate(-5px, 2px) scale(1.02); }
+    4% { clip-path: inset(80% 0 5% 0); transform: translate(5px, -2px) scale(1.01); }
+    6% { clip-path: inset(0 0 0 0); transform: translate(0); }
+    30% { clip-path: inset(0 0 0 0); transform: translate(0); }
+    32% { clip-path: inset(40% 0 43% 0); transform: translate(-10px) scale(1.03); }
+    34% { clip-path: inset(0 0 0 0); transform: translate(0); }
+    60% { clip-path: inset(0 0 0 0); transform: translate(0); }
+    62% { clip-path: inset(15% 0 80% 0); transform: translate(8px) scale(1.02); }
+    64% { clip-path: inset(0 0 0 0); transform: translate(0); }
+    90% { clip-path: inset(0 0 0 0); transform: translate(0); }
+    91% { clip-path: inset(50% 0 30% 0); transform: translate(-3px, 1px); }
+    92% { clip-path: inset(0 0 0 0); transform: translate(0); }
+}
+@keyframes scan-line-move {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+@keyframes fingerprint-glow {
+  0%, 100% { opacity: 0.3; filter: drop-shadow(0 0 0px #00ff41); }
+  50% { opacity: 1; filter: drop-shadow(0 0 8px #00ff41); }
+}
+@keyframes success-reveal {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.matrix-column {
+    position: absolute;
+    top: -20px;
+    color: var(--color-primary-container);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.15;
+}
+.scan-grid {
+    background-image: linear-gradient(to right, rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+.terminal-glow {
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+}
+.cursor-block {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: var(--color-primary-container);
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+}
+.glitch-target {
+    animation: background-glitch 5s steps(1) infinite;
+}
+.fingerprint-active {
+  animation: fingerprint-glow 2s ease-in-out infinite;
+}
+.scanner-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-primary-container);
+  box-shadow: 0 0 10px #00ff41;
+  animation: scan-line-move 2s linear infinite;
+}
+
+.glow-active {
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+}
+.terminal-grid {
+  background-image: radial-gradient(circle, #2A2A2A 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.scanline {
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 255, 65, 0.1);
+  position: absolute;
+  animation: scan 4s linear infinite;
+  z-index: 10;
+  pointer-events: none;
+}
+@keyframes scan {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+.glow-primary {
+  box-shadow: 0 0 12px rgba(0, 255, 65, 0.2);
+}
+.glow-secondary {
+  box-shadow: 0 0 12px rgba(0, 218, 243, 0.2);
+}
+.terminal-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.terminal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.terminal-scroll::-webkit-scrollbar-thumb {
+  background: #3b4b37;
+}
+.glow-primary {
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+}
+.glow-text {
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+}
+@keyframes video-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes flicker {
+  0% { opacity: 0.98; }
+  50% { opacity: 1; }
+  100% { opacity: 0.99; }
+}
+@keyframes pulse-fast {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .3; }
+}
+.crt-overlay {
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+  z-index: 30;
+}
+.scanline {
+  width: 100%;
+  height: 4px;
+  z-index: 10;
+  background: rgba(0, 255, 65, 0.03);
+  opacity: 0.5;
+  position: absolute;
+  bottom: 100%;
+  pointer-events: none;
+  animation: scanline 6s linear infinite;
+}
+@keyframes scanline {
+  0% { bottom: 100%; }
+  100% { bottom: 0%; }
+}
+.blinking-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.2em;
+  background-color: #00ff41;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.2em;
+  background-color: #00ff41;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  background: transparent;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  background: #2a2a2b;
+  height: 4px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  background: #00ff41;
+  margin-top: -6px;
+  border-radius: 0;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+.segmented-progress-bar {
+  display: flex;
+  gap: 2px;
+  width: 100%;
+}
+.segment {
+  height: 8px;
+  flex-grow: 1;
+  background-color: #353436;
+  transition: background-color 0.2s;
+}
+.segment.active {
+  background-color: #00ff41;
+}
+.hash-compare-gradient {
+  background: repeating-linear-gradient(
+      45deg,
+      rgba(0, 255, 65, 0.05),
+      rgba(0, 255, 65, 0.05) 10px,
+      transparent 10px,
+      transparent 20px
+  );
+}
+.entropy-bar {
+  transition: width 1s ease-out;
+}
+.segmented-progress {
+  background: linear-gradient(90deg, #00ff41 2px, transparent 2px);
+  background-size: 4px 100%;
+}
+
+.font-headline-md {
+  font-family: 'JetBrains Mono', monospace;
+}
+.font-label-caps {
+  font-family: 'JetBrains Mono', monospace;
+}
+.font-code-block {
+  font-family: 'JetBrains Mono', monospace;
+}
+.font-display-lg {
+  font-family: 'JetBrains Mono', monospace;
+}
+.font-body-md {
+  font-family: 'Hanken Grotesk', sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-container-high);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-outline-variant);
+}
+
+@keyframes wave-slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-16px); }
+}
+.animate-wave-slide {
+  animation: wave-slide 1s linear infinite;
+}
